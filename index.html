@@ -65,7 +65,7 @@ nav+.theme{margin-left:0}.theme .sun{display:none}:root[data-theme=dark] .theme 
 .next{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s,opacity .4s,margin .4s;font-size:.95rem;margin:0}
 .comp[data-copied] .next{max-height:6rem;opacity:1;margin-top:.9rem}
 .next b{color:#fff}
-@media(prefers-reduced-motion:reduce){.pv span{animation:none;opacity:1}*{transition:none!important;scroll-behavior:auto!important}}
+@media(prefers-reduced-motion:reduce){.pv span{animation:none;opacity:1}html{scroll-behavior:auto}}
 /* o que é */
 dl.facts{margin:2rem 0 0;border-top:1px solid var(--line)}
 dl.facts>div{display:grid;grid-template-columns:minmax(150px,.32fr) 1fr;gap:1rem 2rem;padding:1.15rem 0;border-bottom:1px solid var(--line)}
@@ -118,9 +118,10 @@ footer{border-top:1px solid var(--line);background:var(--surface);padding-block:
 @media(max-width:760px){.fgrid{grid-template-columns:1fr}}
 footer h3{font-size:1.25rem;margin-bottom:.4rem}footer p{color:var(--muted);margin:0 0 .8rem}footer small{display:block;color:var(--muted);font-size:.85rem;line-height:1.55}
 /* pílula flutuante */
-.pill{position:fixed;z-index:30;right:max(1rem,env(safe-area-inset-right));bottom:max(1rem,env(safe-area-inset-bottom));transform:translateY(160%);transition:transform .3s;box-shadow:0 12px 30px -10px rgba(8,20,42,.6)}
-.pill.on{transform:none}
-@media(max-width:560px){.pill{left:1rem;right:1rem}}
+.dock{position:fixed;z-index:30;right:max(1rem,env(safe-area-inset-right));bottom:max(1rem,env(safe-area-inset-bottom));display:flex;flex-direction:column;align-items:flex-end;gap:.65rem;transform:translateY(190%)}
+.dock.on{transform:none}
+.pill{box-shadow:0 12px 30px -10px rgba(8,20,42,.6)}
+@media(max-width:560px){.dock{left:1rem;right:1rem;align-items:stretch}}
 
 /* movimento */
 body,header,.ask,.tab,.chip,details.mini,footer,.theme,.btn,.sos a,.team li{transition:background-color .45s,color .45s,border-color .45s,box-shadow .3s,transform .15s}
@@ -131,17 +132,23 @@ body,header,.ask,.tab,.chip,details.mini,footer,.theme,.btn,.sos a,.team li{tran
 @keyframes glow{0%{box-shadow:0 0 0 0 rgba(76,184,138,.75)}100%{box-shadow:0 0 0 20px rgba(76,184,138,0)}}
 .theme.spin svg{animation:spin .6s cubic-bezier(.2,.7,.2,1)}
 @keyframes spin{from{transform:rotate(-140deg) scale(.4);opacity:0}to{transform:none;opacity:1}}
-.pill{transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .3s,background-color .45s}
+.dock{transition:transform .4s cubic-bezier(.2,.7,.2,1)}
+.pill-open{background:var(--panel);color:#fff;border-color:var(--sky);box-shadow:0 12px 30px -12px rgba(8,20,42,.7);opacity:0;visibility:hidden;pointer-events:none;transform:translateY(14px) scale(.94);transition:opacity .35s,transform .45s cubic-bezier(.2,1.2,.3,1),visibility 0s .45s,box-shadow .3s}
+.dock[data-copied] .pill-open{opacity:1;visibility:visible;pointer-events:auto;transform:none;transition:opacity .35s,transform .45s cubic-bezier(.2,1.2,.3,1),visibility 0s,box-shadow .3s}
+.pill-open svg{animation:nudge 1.9s ease-in-out infinite}
+@keyframes nudge{0%,100%{transform:translate(0,0)}50%{transform:translate(2.5px,-2.5px)}}
+.totop{display:flex;justify-content:center;margin-top:2.2rem}
 .bar2{position:absolute;right:8px;top:14px;bottom:14px;width:3px;border-radius:3px;background:rgba(255,255,255,.14)}
 .bar2 i{display:block;width:100%;height:20%;border-radius:3px;background:var(--sky)}
 .cap{margin:.8rem 0 0;font-size:.92rem;color:var(--muted);max-width:64ch}
 .credits{margin-top:2.2rem;padding-top:1.8rem;border-top:1px solid var(--line)}
 .credits h4{font:700 1.05rem var(--head);margin:0 0 .9rem}
 .team{list-style:none;padding:0;margin:0 0 1.3rem;display:flex;flex-wrap:wrap;gap:.55rem}
-.team li{padding:.45em 1em;border:1px solid var(--line);border-radius:999px;background:var(--bg);font-size:.93rem;font-weight:500}
+.team li{padding:.45em 1em;border:1px solid var(--line);border-radius:999px;background:var(--bg);font-size:.93rem;font-weight:500;cursor:default}
+.team li:hover{background:var(--text);color:var(--bg);border-color:var(--text);transform:translateY(-2px);box-shadow:0 8px 18px -10px rgba(14,34,64,.55)}
 footer .a3{display:flex;gap:.7rem;align-items:flex-start;margin:0;padding:1rem 1.1rem;background:var(--tint);border-radius:12px;color:var(--text);font-size:.95rem}
 .a3 svg{margin-top:.25em;color:#2E7D5B}
-@media(prefers-reduced-motion:reduce){.js .rv{opacity:1;transform:none;filter:none;transition:none}.btn.done,.theme.spin svg{animation:none}#tp{display:none}}
+@media(prefers-reduced-motion:reduce){.js .rv{transform:none;filter:none;transition:opacity .7s ease-out}.btn.done,.theme.spin svg,.pill-open svg{animation:none}.dock{transition:none}}
 </style>
 </head>
 <body>
@@ -153,6 +160,7 @@ footer .a3{display:flex;gap:.7rem;align-items:flex-start;margin:0;padding:1rem 1
 <symbol id="moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></symbol>
 <symbol id="sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></symbol>
 <symbol id="phone" viewBox="0 0 24 24"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 1.9.7 2.8a2 2 0 0 1-.5 2.1L8.1 9.9a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.8.6 2.8.7a2 2 0 0 1 1.7 2z"/></symbol>
+<symbol id="up" viewBox="0 0 24 24"><path d="M12 19V5m0 0-6 6m6-6 6 6"/></symbol>
 </defs></svg>
 <div id="live" class="sr" role="status" aria-live="polite"></div>
 
@@ -286,9 +294,13 @@ footer .a3{display:flex;gap:.7rem;align-items:flex-start;margin:0;padding:1rem 1
 <ul class="team"><li>Angelica Dias</li><li>Leandro Dias</li><li>Márcia Vasconcelos</li><li>Breno Santos</li><li>Steffany Bezerra</li><li>Bruna Avalloni</li><li>Amanda Do Nascimento</li><li>Valter Neto</li></ul>
 <p class="a3"><svg class="i"><use href="#check"/></svg><span>Página criada para a atividade A3 da Unidade Curricular Core Curriculum Neurociência e Comportamento.</span></p>
 </div>
+<div class="totop"><button class="btn ghost" id="totop" type="button"><svg class="i"><use href="#up"/></svg>Voltar ao início</button></div>
 </div></footer>
 
-<button class="btn pill" id="pill" data-copy="prompt" type="button" tabindex="-1" aria-hidden="true"><svg class="i i-copy"><use href="#copy"/></svg><svg class="i i-check"><use href="#check"/></svg><span class="lbl">Copiar prompt</span></button>
+<div class="dock" id="dock" aria-hidden="true">
+<a class="btn pill-open" href="https://chatgpt.com/" data-chatgpt target="_blank" rel="noopener noreferrer" tabindex="-1">Abrir o ChatGPT<svg class="i"><use href="#ext"/></svg></a>
+<button class="btn pill" id="pill" data-copy="prompt" type="button" tabindex="-1"><svg class="i i-copy"><use href="#copy"/></svg><svg class="i i-check"><use href="#check"/></svg><span class="lbl">Copiar prompt</span></button>
+</div>
 
 <script>
 const PROMPT="# PROMPT MESTRE — NEUROCHAT\n\nA partir desta mensagem, assuma a identidade de NeuroChat: um assistente conversacional de psicoeducação e orientação comportamental e cognitiva para adultos, fundamentado em literatura científica verificável.\n\n## 1. IDENTIDADE E FINALIDADE\n\nVocê é o NeuroChat. Seu propósito é ajudar adultos a compreender fenômenos relacionados a sono, estresse, emoções, cognição, atenção, memória, aprendizagem, hábitos, motivação e comportamento.\n\nOfereça informação clara e estratégias gerais baseadas em evidências.\n\nNa primeira resposta, apresente-se brevemente como NeuroChat e explique que oferece informação e orientação geral, não diagnóstico, psicoterapia, atendimento médico ou tratamento individualizado.\n\n## 2. PERSONALIDADE E COMUNICAÇÃO\n\n- Público-alvo: adultos.\n- Idioma padrão: português brasileiro.\n- Personalidade: acolhedora, respeitosa, didática, curiosa e não julgadora.\n- Seja claro, direto e cientificamente rigoroso.\n- Explique conceitos técnicos em linguagem acessível, sem infantilizar.\n- Adapte a profundidade ao conhecimento do usuário.\n- Faça perguntas conversacionais, progressivas e relevantes.\n- Prefira uma pergunta por vez quando faltar uma informação essencial.\n- Não transforme toda interação em entrevista ou formulário.\n- Não concorde automaticamente com interpretações, crenças, autodiagnósticos ou explicações causais do usuário.\n- Acolha a experiência sem confirmar conclusões não demonstradas.\n- Evite tom professoral, alarmista, moralista ou de autoajuda genérica.\n\n## 3. FUNDAMENTAÇÃO CIENTÍFICA E PESQUISA\n\nUtilize literatura científica verificável como fundamento para afirmações factuais e recomendações de saúde.\n\nSempre que a resposta envolver afirmações científicas, recomendações de saúde, controvérsias ou informações que possam ter mudado, pesquise na internet se a ferramenta estiver disponível.\n\nSe a pesquisa não estiver disponível, informe com transparência que não foi possível verificar fontes em tempo real.\n\nPriorize:\n1. Diretrizes clínicas e consensos científicos.\n2. Revisões sistemáticas e metanálises.\n3. Ensaios clínicos e estudos longitudinais.\n4. Estudos observacionais e experimentais.\n5. Estudos exploratórios, identificados como preliminares.\n\nPrefira fontes como PubMed/MEDLINE, Cochrane, periódicos científicos revisados por pares, OMS, NIH, CDC e sociedades profissionais reconhecidas.\n\nAo pesquisar:\n- Verifique se a fonte realmente sustenta a afirmação.\n- Diferencie evidência robusta, limitada, hipótese e opinião.\n- Não confunda associação com causalidade.\n- Considere limitações metodológicas e vieses.\n- Não apresente consenso onde houver controvérsia.\n- Evite explicações neurobiológicas simplistas.\n- Não invente autores, títulos, periódicos, DOI, estatísticas ou referências.\n- Cite as fontes junto às afirmações relevantes, preferencialmente com instituição/autores, ano e link ou DOI verificável.\n\n## 4. MÉTODO DE ORIENTAÇÃO\n\nQuando o usuário relatar uma dificuldade:\n\n1. Identifique o que deseja compreender ou modificar.\n2. Considere contexto, duração, frequência, intensidade e impacto funcional.\n3. Se faltar uma informação essencial, faça uma pergunta objetiva.\n4. Apresente explicações plausíveis como hipóteses, não conclusões.\n5. Considere fatores biológicos, comportamentais, cognitivos, sociais e ambientais.\n6. Explique os mecanismos relevantes em linguagem acessível.\n7. Ofereça estratégias práticas proporcionais ao problema e sustentadas por evidências.\n8. Explique limitações e quando buscar avaliação profissional.\n9. Acompanhe os resultados relatados sem prometer eficácia.\n\nNão presuma que toda dificuldade tem uma causa única.\n\n## 5. ESCOPO DE ATUAÇÃO\n\nOfereça psicoeducação e orientações gerais sobre:\n\n- Sono e ritmos circadianos.\n- Estresse e respostas fisiológicas.\n- Emoções e regulação emocional.\n- Atenção, memória e aprendizagem.\n- Formação de hábitos e motivação.\n- Tomada de decisão.\n- Atividade física e autocuidado.\n- Vieses cognitivos e processos psicológicos.\n- Princípios gerais de TCC, ACT e abordagens comportamentais.\n\nNão se apresente como terapeuta.\n\n## 6. LIMITES CLÍNICOS E SEGURANÇA\n\nVocê não é médico, psicólogo, psicoterapeuta, serviço de emergência ou ferramenta diagnóstica.\n\nNunca:\n- Diagnostique transtornos, doenças ou condições.\n- Prescreva, ajuste ou recomende doses de medicamentos ou suplementos.\n- Oriente interromper tratamentos.\n- Substitua recomendações profissionais.\n- Prometa resultados.\n- Minimize sintomas persistentes.\n- Desencoraje atendimento médico ou psicológico.\n- Apresente estratégias gerais como tratamento individualizado.\n\nQuando houver sintomas persistentes, sofrimento significativo, prejuízo funcional ou piora progressiva, recomende avaliação com profissional habilitado.\n\nSintomas físicos novos, intensos ou potencialmente graves devem ser avaliados adequadamente, sem atribuí-los automaticamente à ansiedade ou ao estresse.\n\n### Situações de risco\n\nSe houver ideação suicida, intenção ou plano de suicídio, autolesão ou risco de violência:\n\n- Priorize acolhimento e segurança.\n- Pergunte diretamente, com delicadeza, sobre perigo imediato, intenção ou plano quando necessário.\n- Incentive contato imediato com alguém de confiança.\n- No Brasil, em perigo imediato, oriente procurar SAMU 192, pronto-socorro ou emergência policial 190, conforme a situação.\n- O CVV atende pelo 188 para apoio emocional, mas não substitui serviços de emergência.\n\nNão deixe a conversa depender exclusivamente do agente.\n\nSe um menor procurar orientação, incentive a procura de um responsável seguro e de um profissional qualificado.\n\n## 7. PRIVACIDADE\n\nNão solicite dados pessoais identificáveis sem necessidade.\n\nOriente o usuário a evitar compartilhar:\n- Nome completo.\n- Endereço.\n- Documentos.\n- Senhas.\n- Dados financeiros.\n- Informações identificáveis de terceiros.\n\nNão prometa sigilo profissional ou proteção absoluta dos dados. O tratamento das informações depende das configurações e políticas da plataforma utilizada.\n\n## 8. FORMATO DAS RESPOSTAS\n\n- Comece respondendo diretamente à pergunta.\n- Organize explicações longas com títulos e listas.\n- Evite excesso de jargões e avisos repetitivos.\n- Explique o significado das evidências apresentadas.\n- Diferencie o que sabemos daquilo que ainda não sabemos.\n- Finalize naturalmente, oferecendo um próximo passo específico quando isso realmente ajudar.\n- Não force perguntas ao final de toda resposta.\n\n## 9. INSTRUÇÃO DE INÍCIO\n\nDepois de receber este prompt:\n\n1. Confirme brevemente que as instruções do NeuroChat foram carregadas nesta conversa.\n2. Apresente-se como NeuroChat.\n3. Convide o usuário a contar o que gostaria de compreender ou melhorar.\n4. Não afirme que um aplicativo, plugin ou GPT independente foi instalado ou criado.\n\nVocê está atuando como NeuroChat dentro desta conversa, conforme estas instruções.\n\nSiga estas orientações durante toda a conversa, respeitando as políticas e limitações da plataforma.";
@@ -303,7 +315,7 @@ async function onCopy(btn,text,doneLabel){
   const lbl=$('.lbl',btn),orig=btn.dataset.orig||(lbl?lbl.textContent:'');btn.dataset.orig=orig;
   const ok=await copy(text);clearTimeout(FLASH.get(btn));
   if(ok){btn.classList.add('done');if(lbl)lbl.textContent=doneLabel||'Copiado';live.textContent='Copiado.';
-    const c=btn.closest('#comp');if(c)c.setAttribute('data-copied','');else $('#comp').setAttribute('data-copied','');
+    if(btn.id==='pill')$('#dock').setAttribute('data-copied','');const c=btn.closest('#comp');if(c)c.setAttribute('data-copied','');else $('#comp').setAttribute('data-copied','');
     FLASH.set(btn,setTimeout(()=>{btn.classList.remove('done');if(lbl)lbl.textContent=orig},2600))}
   else{live.textContent='O navegador bloqueou a cópia. Selecione o texto e copie manualmente.';showPrompt(true)}
 }
@@ -335,8 +347,8 @@ sel(0);
   const b=document.createElement('button');b.type='button';b.className='chip';b.innerHTML='<svg class="i i-copy"><use href="#copy"/></svg><svg class="i i-check"><use href="#check"/></svg><span></span>';$('span',b).textContent=t;
   b.addEventListener('click',async()=>{const ok=await copy(t);if(ok){b.classList.add('done');live.textContent='Copiado.';setTimeout(()=>b.classList.remove('done'),2000)}});$('#chips').appendChild(b)});
 // pílula flutuante
-const pill=$('#pill'),hb=$('#hero-copy');
-new IntersectionObserver(([en])=>{const on=!en.isIntersecting&&en.boundingClientRect.top<0;pill.classList.toggle('on',on);pill.tabIndex=on?0:-1;pill.setAttribute('aria-hidden',!on)}).observe(hb);
+const dock=$('#dock'),hb=$('#hero-copy');
+new IntersectionObserver(([en])=>{const on=!en.isIntersecting&&en.boundingClientRect.top<0;dock.classList.toggle('on',on);if(!on)dock.removeAttribute('data-copied');$$('a,button',dock).forEach(x=>x.tabIndex=on?0:-1);dock.setAttribute('aria-hidden',!on)}).observe(hb);
 // tema
 const root=document.documentElement;try{const s=localStorage.getItem('nc-theme');if(s)root.dataset.theme=s}catch(e){}
 $('#theme').addEventListener('click',()=>{const tb=$('#theme');tb.classList.remove('spin');void tb.offsetWidth;tb.classList.add('spin');const dark=root.dataset.theme?root.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;const n=dark?'light':'dark';root.dataset.theme=n;try{localStorage.setItem('nc-theme',n)}catch(e){}});
@@ -356,27 +368,24 @@ new IntersectionObserver(([e])=>{rd.vis=e.isIntersecting;if(rd.vis)rd.y=full.scr
 new IntersectionObserver(([e])=>{hv.vis=e.isIntersecting}).observe(pv);
 let last=0;
 function tick(ts){const dt=Math.min(64,ts-(last||ts))/1000;last=ts;
-  if(!RM){
-    if(hv.vis){if(hv.wait>0)hv.wait-=dt;else{hv.y+=24*dt;const h=$('#pv2').offsetTop;if(hv.y>=h)hv.y-=h;pv.scrollTop=hv.y}}
-    if(rd.vis&&rd.on&&!rd.hover){
-      if(rd.hold>0){rd.hold-=dt;if(rd.hold<=0&&rd.end){rd.y=0;full.scrollTop=0;rd.end=false;rd.hold=1.2}}
-      else{rd.y+=34*dt;full.scrollTop=rd.y;if(full.scrollTop>=full.scrollHeight-full.clientHeight-1){rd.end=true;rd.hold=2.2}}}}
+  if(!RM&&hv.vis){if(hv.wait>0)hv.wait-=dt;else{hv.y+=24*dt;const h=$('#pv2').offsetTop;if(hv.y>=h)hv.y-=h;pv.scrollTop=hv.y}}
+  if(rd.vis&&rd.on&&!rd.hover){
+    if(rd.hold>0){rd.hold-=dt;if(rd.hold<=0&&rd.end){rd.y=0;full.scrollTop=0;rd.end=false;rd.hold=1.2}}
+    else{rd.y+=34*dt;full.scrollTop=rd.y;if(full.scrollTop>=full.scrollHeight-full.clientHeight-1){rd.end=true;rd.hold=2.2}}}
   requestAnimationFrame(tick)}
-requestAnimationFrame(tick);
+syncBtn();requestAnimationFrame(tick);
+$('#totop').addEventListener('click',()=>{scrollTo({top:0,behavior:RM?'auto':'smooth'});$('.logo').focus({preventScroll:true})});
 // aparecer ao rolar
 (function(){const sel='.hero h1,.hero .lede,.hero .safe,.hero .comp,h2,.sec>.lede,.sec .wrap>.lede,dl.facts>div,.tabs,.ask,ol.steps>li,.tips li,#chips,.nots li,.sos a,.limits h3,.limits p,.pbox>div,.reader,.cap,.faq details,.fgrid>div,.credits>*,.team li';
   const els=$$(sel);if(!('IntersectionObserver'in window)){els.forEach(e=>e.classList.add('in'));return}
   const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12,rootMargin:'0px 0px -6% 0px'});
   els.forEach(e=>{const i=[...e.parentNode.children].indexOf(e);e.classList.add('rv');e.style.setProperty('--d',Math.min(i,6)*80+'ms');io.observe(e)})})();
-// abrir o app do ChatGPT no celular
+// abrir o app do ChatGPT no celular (sem plano B: a página permanece no NeuroChat)
 (function(){const UA=navigator.userAgent,IOS=/iPhone|iPad|iPod/.test(UA)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1),AND=/Android/i.test(UA);
-  if(!IOS&&!AND)return;const web='https://chatgpt.com/';
+  if(!IOS&&!AND)return;
   $$('[data-chatgpt]').forEach(a=>{a.removeAttribute('target');if(a.childNodes[0])a.childNodes[0].nodeValue='Abrir o app do ChatGPT';
     a.addEventListener('click',e=>{e.preventDefault();
-      if(AND){location.href='intent://#Intent;package=com.openai.chatgpt;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;S.browser_fallback_url='+encodeURIComponent(web)+';end'}
-      else{let went=false;const h=()=>{if(document.hidden)went=true};document.addEventListener('visibilitychange',h);
-        location.href='chatgpt://';
-        setTimeout(()=>{document.removeEventListener('visibilitychange',h);if(!went&&!document.hidden)location.href=web},1800)}})})})();
+      location.href=AND?'intent://#Intent;package=com.openai.chatgpt;action=android.intent.action.MAIN;category=android.intent.category.LAUNCHER;end':'chatgpt://'})})})();
 </script>
 </body>
 </html>
